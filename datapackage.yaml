@@ -1,0 +1,222 @@
+profile: data-package
+name: shortparis-data
+version: 0.1.0 #See https://specs.frictionlessdata.io/patterns/#data-package-version
+resources:
+  - encoding: utf-8
+    format: csv
+    hashing: md5
+    name: articles
+    path: data/articles.csv
+    profile: tabular-data-resource
+    schema:
+      fields:
+        - name: date
+          type: date
+        - name: author
+          type: string
+        - name: title
+          type: string
+          constraints:
+            required: True
+        - name: source
+          type: string
+          constraints:
+            required: True
+        - name: url
+          type: string
+          format: uri
+          constraints:
+            required: True
+            unique: True
+        - name: type
+          type: string
+          constraints:
+            required: True
+            pattern: "General|Interview|Live Review|Review|Photo Reportage|Music Video Premiere"
+        - name: language
+          type: string
+          constraints:
+            required: True
+        - name: release_id
+          type: string
+        - name: gig_id
+          type: string
+        - name: archive_service
+          type: string
+    primaryKey: url
+    foreignKeys:
+      - fields: release_id
+        reference:
+          resource: releases
+          fields: release_id
+      - fields: gig_id
+        reference:
+          resource: gigs
+          fields: gig_id
+    scheme: file
+  - encoding: utf-8
+    format: csv
+    hashing: md5
+    name: gigproof
+    path: data/gigproof.csv
+    profile: tabular-data-resource
+    schema:
+      fields:
+        - name: gig_id
+          type: string
+          constraints:
+            required: True
+        - name: url
+          type: string
+          format: uri
+          constraints:
+            required: True
+        - name: type
+          type: string
+          constraints:
+            required: True
+        - name: archive_service
+          type: string
+    primaryKey: 
+      - gig_id
+      - url
+    foreignKeys:
+      - fields: gig_id
+        reference:
+            resource: gigs
+            fields: gig_id
+    scheme: file
+  - encoding: utf-8
+    format: csv
+    hashing: md5
+    name: gigs
+    path: data/gigs.csv
+    profile: tabular-data-resource
+    schema:
+      fields:
+        - name: gig_id
+          type: string
+          constraints:
+            required: True
+            unique: True
+            pattern: "g[0-9]{6}"
+        - name: date
+          type: date
+          constraints:
+            required: True
+        - name: venue
+          type: string
+        - name: city
+          type: string
+          constraints:
+            required: True
+        - name: country
+          type: string
+          constraints:
+            required: True
+        - name: festival
+          type: string
+        - name: event_mbid
+          type: string
+          format: uuid
+          constraints:
+            unique: True
+        - name: status
+          type: string
+        - name: notes
+          type: string
+    primaryKey: gig_id
+    scheme: file
+  - encoding: utf-8
+    format: csv
+    hashing: md5
+    name: live_videos
+    path: data/live_videos.csv
+    profile: tabular-data-resource
+    schema:
+      fields:
+        - name: title
+          type: string
+          constraints:
+            required: True
+        - name: url
+          type: string
+          format: uri
+          constraints:
+            required: True
+            unique: True
+        - name: gig_id
+          type: string
+          constraints:
+            required: True
+        - name: content
+          type: string
+        - name: notes
+          type: string
+    primaryKey: url
+    foreignKeys:
+      - fields: gig_id
+        reference: 
+          resource: gigs
+          fields: gig_id
+    scheme: file
+  - encoding: utf-8
+    format: csv
+    hashing: md5
+    name: releases
+    path: data/releases.csv
+    profile: tabular-data-resource
+    schema:
+      fields:
+        - name: release_id
+          type: string
+          constraints:
+            required: True
+            unique: True
+        - name: original_title
+          type: string
+          constraints:
+            required: True
+        - name: english_title
+          type: string
+        - name: type
+          type: string
+          constraints:
+            required: True
+        - name: date
+          type: date
+        - name: discogs_id
+          type: string
+    primaryKey: release_id
+    scheme: file
+  - encoding: utf-8
+    format: csv
+    hashing: md5
+    name: shared_bills
+    path: data/shared_bills.csv
+    profile: tabular-data-resource
+    schema:
+      fields:
+        - name: gig_id
+          type: string
+          constraints:
+            required: True
+        - name: artist_name
+          type: string
+          constraints:
+            required: True
+        - name: artist_mbid
+          type: string
+          format: uuid
+          constraints:
+            required: True
+    primaryKey: 
+      - gig_id
+      - artist_name
+    foreignKeys:
+      - fields: gig_id
+        reference: 
+          resource: gigs
+          fields: gig_id
+    scheme: file
+
