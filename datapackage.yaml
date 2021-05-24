@@ -1,6 +1,6 @@
 profile: data-package
 name: shortparis-data
-version: 0.1.0 #See https://specs.frictionlessdata.io/patterns/#data-package-version
+version: 0.3.0
 resources:
   - encoding: utf-8
     format: csv
@@ -106,6 +106,9 @@ resources:
             required: True
         - name: venue
           type: string
+        - name: venue_mbid
+          type: string
+          format: uuid
         - name: city
           type: string
           constraints:
@@ -135,6 +138,10 @@ resources:
     profile: tabular-data-resource
     schema:
       fields:
+        - name: status
+          type: string
+          constraints:
+            pattern: "unavailable"
         - name: title
           type: string
           constraints:
@@ -145,10 +152,16 @@ resources:
           constraints:
             required: True
             unique: True
+        - name: uploader
+          type: string
         - name: gig_id
           type: string
           constraints:
             required: True
+        - name: content_type
+          type: string
+          constraints:
+            pattern: "Full Set|Song|Multiple Songs|DJ Set"
         - name: content
           type: string
         - name: notes
