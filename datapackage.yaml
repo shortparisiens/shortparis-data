@@ -1,6 +1,6 @@
 profile: data-package
 name: shortparis-data
-version: 0.3.0
+version: 0.3.4
 resources:
   - encoding: utf-8
     format: csv
